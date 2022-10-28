@@ -83,6 +83,14 @@ func GetAvailableLanguage() (map[string]string, error) {
 	* limit: The maxmimum number of results returned. Use -1 to use default setting
 
 	* suggest: If True, return results and suggestion (if any) in a tuple. Fasle is defalt
+
+	Return:
+
+	* A slice of Wikipedia titles from the search engine
+
+	* Suggestion if `suggest` is being set True
+
+	* Error
 */
 func Search(_input string, limit int, suggest bool) ([]string, string, error) {
 	if limit < 0 {
@@ -154,6 +162,12 @@ func Suggest(_input string) (string, error) {
 	* limit(optional): The maximum number of results returned. Use -1 to use the default setting
 
 	* radius(optional): Search radius in meters. The value must be between 10 and 10000. Use -1 to use the default setting
+
+	Return:
+
+	* A slice of geosearch titles
+
+	* Error
 */
 func GeoSearch(latitude float32, longitude float32, radius float32, title string, limit int) ([]string, error) {
 	if radius <= 0 {
@@ -205,6 +219,9 @@ func GeoSearch(latitude float32, longitude float32, radius float32, title string
 	* limit: The number of random pages returned (max of 10)
 */
 func GetRandom(limit int) ([]string, error) {
+	if limit < 0 {
+		limit = 5
+	}
 	args := map[string]string{
 		"action":      "query",
 		"list":        "random",
@@ -237,9 +254,15 @@ func GetRandom(limit int) ([]string, error) {
 	* auto_suggest: Let Wikipedia find a valid page title for the query. Default should be False
 
 	* redirect: Allow redirection. Default should be True
+
+	Return:
+
+	* A WikipediaPage object
+
+	* Error
 */
 func GetPage(title string, pageid int, suggest bool, redirect bool) (page.WikipediaPage, error) {
-	if pageid != -1 {
+	if pageid >= 0 {
 		return page.MakeWikipediaPage(pageid, "", "", redirect)
 	}
 	if title != "" {

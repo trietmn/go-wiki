@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	mockDataPath        string = "./mock_data.json"
-	mockWikiRequestPath string = "./mock_wiki_request.json"
+	mockDataPath        string = "./mock_data.json"         // Path of the mock data json
+	mockWikiRequestPath string = "./mock_wiki_request.json" // Path of the mock wiki request-response
 )
 
 var (
@@ -23,6 +23,7 @@ var (
 	MockRequestMap  map[string]map[string]string    = MakeMockRequestMap(MockWikiRequest)
 )
 
+// Parse the mock data json file to the form that we can use for testing
 func MakeMockData(filepath string) map[string]interface{} {
 	var res map[string]interface{}
 	jsonFile, err := os.Open(filepath)
@@ -38,6 +39,7 @@ func MakeMockData(filepath string) map[string]interface{} {
 	return res
 }
 
+// Parse the mock request-response json file to the form that we can use for testing
 func MakeMockWikiRequest(filepath string) map[string]models.RequestResult {
 	var res map[string]models.RequestResult
 	jsonFile, err := os.Open(filepath)
@@ -55,6 +57,7 @@ func MakeMockWikiRequest(filepath string) map[string]models.RequestResult {
 	return res
 }
 
+// Parse the key of the json request into args
 func MakeMockRequestMap(mockrequest map[string]models.RequestResult) map[string]map[string]string {
 	res := make(map[string]map[string]string)
 	for key, _ := range mockrequest {
@@ -69,6 +72,7 @@ func MakeMockRequestMap(mockrequest map[string]models.RequestResult) map[string]
 	return res
 }
 
+// Mock the MakeWikiRequestAPI function
 func MockRequester(args map[string]string) (models.RequestResult, error) {
 OuterLoop:
 	for key, value := range MockRequestMap {

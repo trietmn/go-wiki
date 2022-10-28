@@ -12,6 +12,8 @@ import (
 	"strings"
 )
 
+// Result after we parse the response of Wikipedia API.
+// Some attributes must be get manually using the WikipediaPage methods
 type WikipediaPage struct {
 	PageID         int              `json:"pageid"`
 	Title          string           `json:"title"`

@@ -178,15 +178,15 @@
     ],
     "great_wall_of_china.coordinates.lat": "40.677",
     "great_wall_of_china.coordinates.lon": "117.232",
-    "great_wall_of_china.geo_seach": [
+    "great_wall_of_china.geo_search": [
         "Great Wall of China"
     ],
-    "great_wall_of_china.geo_seach_with_radius": [
+    "great_wall_of_china.geo_search_with_radius": [
         "Great Wall of China",
         "Jinshanling"
     ],
-    "great_wall_of_china.geo_seach_with_existing_article_name": [
+    "great_wall_of_china.geo_search_with_existing_article_name": [
         "Great Wall of China"
     ],
-    "great_wall_of_china.geo_seach_with_non_existing_article_name": []
+    "great_wall_of_china.geo_search_with_non_existing_article_name": []
 }
