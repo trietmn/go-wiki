@@ -6,7 +6,7 @@
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![GoDoc](https://godoc.org/github.com/trietmn/go-wiki?status.svg)](https://pkg.go.dev/github.com/trietmn/go-wiki)
 
-This is a Go (Golang) open-source module that makes it easy to access and parse data from Wikipedia. You can use this module to crawl data for your data warehouse or use it for your "Know-it-all" AI Chatbot. I work on this project in my freetime so some updates might take longer to get here. Other than that please have fun with the module and send me your feedback.
+This is a Golang Wikipedia API wrapper - The Golang module that makes it easy to access and parse data from Wikipedia. You can use this module to crawl data for your data warehouse or use it for your "Know-it-all" AI Chatbot.
 
 ## Contents
 
