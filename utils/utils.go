@@ -21,6 +21,7 @@ const (
 var (
 	UserAgent     string          = "go-wiki"
 	WikiLanguage  string          = "en"
+	WikiURL       string          = "http://%v.wikipedia.org/w/api.php"
 	LastCall      time.Time       = time.Now()
 	Cache         cache.WikiCache = cache.MakeWikiCache()
 	WikiRequester                 = RequestWikiApi
@@ -35,7 +36,7 @@ func TurnSliceOfString(s []interface{}) []string {
 }
 
 /*
-	Return true if 2 slices are the same
+Return true if 2 slices are the same
 */
 func CompareSlice(a, b []string) bool {
 	if len(a) != len(b) {
@@ -50,7 +51,7 @@ func CompareSlice(a, b []string) bool {
 }
 
 /*
-	Return true if string s is in list
+Return true if string s is in list
 */
 func Isin(list []string, s string) bool {
 	for _, v := range list {
@@ -62,19 +63,19 @@ func Isin(list []string, s string) bool {
 }
 
 /*
-	Update the last time we call the API (API should)
+Update the last time we call the API (API should)
 */
 func UpdateLastCall(now time.Time) {
 	LastCall = now
 }
 
 /*
-	Make a request to the Wikipedia API using the given search parameters.
+Make a request to the Wikipedia API using the given search parameters.
 
-	Returns a RequestResult (You can see the model in the models.go file)
+Returns a RequestResult (You can see the model in the models.go file)
 */
 func RequestWikiApi(args map[string]string) (models.RequestResult, error) {
-	url := fmt.Sprintf("http://%v.wikipedia.org/w/api.php", WikiLanguage)
+	url := fmt.Sprintf(WikiURL, WikiLanguage)
 	// Make new request object
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -134,7 +135,7 @@ func RequestWikiApi(args map[string]string) (models.RequestResult, error) {
 }
 
 /*
-	Make a deep copy of a map[string]string
+Make a deep copy of a map[string]string
 */
 func CopyMap(source map[string]string) map[string]string {
 	res := make(map[string]string)
@@ -145,7 +146,7 @@ func CopyMap(source map[string]string) map[string]string {
 }
 
 /*
-	Update map a using map b
+Update map a using map b
 */
 func UpdateMap(a map[string]string, b map[string]interface{}) {
 	for k, v := range b {

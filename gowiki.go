@@ -12,7 +12,7 @@ import (
 )
 
 /*
-	Change the user-agent that you use to crawl Wikipedia data
+Change the user-agent that you use to crawl Wikipedia data
 */
 func SetUserAgent(user string) {
 
@@ -20,10 +20,10 @@ func SetUserAgent(user string) {
 }
 
 /*
-	Change the language of the API being requested.
-	Set `prefix` to one of the two letter prefixes found on the
-	list of all Wikipedia <http://meta.wikimedia.org/wiki/List_of_Wikipedias>.
-	Then clear all of the cache
+Change the language of the API being requested.
+Set `prefix` to one of the two letter prefixes found on the
+list of all Wikipedia <http://meta.wikimedia.org/wiki/List_of_Wikipedias>.
+Then clear all of the cache
 */
 func SetLanguage(lang string) {
 
@@ -32,7 +32,19 @@ func SetLanguage(lang string) {
 }
 
 /*
-	Change the max number of the request responses stored in the Cache
+Change the language of the API being requested.
+Set `prefix` to one of the two letter prefixes found on the
+list of all Wikipedia <http://meta.wikimedia.org/wiki/List_of_Wikipedias>.
+Then clear all of the cache
+*/
+func SetURL(url string) {
+
+	utils.WikiURL = url
+	utils.Cache.Clear()
+}
+
+/*
+Change the max number of the request responses stored in the Cache
 */
 func SetMaxCacheMemory(n int) {
 
@@ -40,7 +52,7 @@ func SetMaxCacheMemory(n int) {
 }
 
 /*
-	Change the max duration of the request responses exist in the Cache
+Change the max duration of the request responses exist in the Cache
 */
 func SetCacheDuration(x time.Duration) {
 
@@ -48,10 +60,10 @@ func SetCacheDuration(x time.Duration) {
 }
 
 /*
-	List all the currently supported language prefixes (usually ISO language code).
-	Can be inputted to `set_lang` to change the Mediawiki that `wikipedia` requests results from.
+List all the currently supported language prefixes (usually ISO language code).
+Can be inputted to `set_lang` to change the Mediawiki that `wikipedia` requests results from.
 
-	Returns: Map of <prefix>: <local_lang_name> pairs.
+Returns: Map of <prefix>: <local_lang_name> pairs.
 */
 func GetAvailableLanguage() (map[string]string, error) {
 	args := map[string]string{
@@ -74,23 +86,23 @@ func GetAvailableLanguage() (map[string]string, error) {
 }
 
 /*
-	Do a Wikipedia search for `query`.
+Do a Wikipedia search for `query`.
 
-	Keyword arguments:
+Keyword arguments:
 
-	* _input: The query used to search Ex:"Who invented the lightbulb"
+* _input: The query used to search Ex:"Who invented the lightbulb"
 
-	* limit: The maxmimum number of results returned. Use -1 to use default setting
+* limit: The maxmimum number of results returned. Use -1 to use default setting
 
-	* suggest: If True, return results and suggestion (if any) in a tuple. Fasle is defalt
+* suggest: If True, return results and suggestion (if any) in a tuple. Fasle is defalt
 
-	Return:
+Return:
 
-	* A slice of Wikipedia titles from the search engine
+* A slice of Wikipedia titles from the search engine
 
-	* Suggestion if `suggest` is being set True
+* Suggestion if `suggest` is being set True
 
-	* Error
+* Error
 */
 func Search(_input string, limit int, suggest bool) ([]string, string, error) {
 	if limit < 0 {
@@ -123,9 +135,9 @@ func Search(_input string, limit int, suggest bool) ([]string, string, error) {
 }
 
 /*
-	Get a Wikipedia search suggestion for `_input`.
+Get a Wikipedia search suggestion for `_input`.
 
-	Returns a string or "" if no suggestion was found.
+Returns a string or "" if no suggestion was found.
 */
 func Suggest(_input string) (string, error) {
 	args := map[string]string{
@@ -148,26 +160,26 @@ func Suggest(_input string) (string, error) {
 }
 
 /*
-	Do a wikipedia geo search for `latitude` and `longitude`
-	using HTTP API described in http://www.mediawiki.org/wiki/Extension:GeoData
+Do a wikipedia geo search for `latitude` and `longitude`
+using HTTP API described in http://www.mediawiki.org/wiki/Extension:GeoData
 
-	Arguments:
+Arguments:
 
-	* latitude: Latitude of the searched place
+* latitude: Latitude of the searched place
 
-	* longitude: longitude of the searched place
+* longitude: longitude of the searched place
 
-	* title(optional): The title of an article to search for. Use "" to use the default setting
+* title(optional): The title of an article to search for. Use "" to use the default setting
 
-	* limit(optional): The maximum number of results returned. Use -1 to use the default setting
+* limit(optional): The maximum number of results returned. Use -1 to use the default setting
 
-	* radius(optional): Search radius in meters. The value must be between 10 and 10000. Use -1 to use the default setting
+* radius(optional): Search radius in meters. The value must be between 10 and 10000. Use -1 to use the default setting
 
-	Return:
+Return:
 
-	* A slice of geosearch titles
+* A slice of geosearch titles
 
-	* Error
+* Error
 */
 func GeoSearch(latitude float32, longitude float32, radius float32, title string, limit int) ([]string, error) {
 	if radius <= 0 {
@@ -210,13 +222,13 @@ func GeoSearch(latitude float32, longitude float32, radius float32, title string
 }
 
 /*
-	Get a list of random Wikipedia article titles.
+Get a list of random Wikipedia article titles.
 
-	**Note:: Random only gets articles from namespace 0, meaning no Category, User talk, or other meta-Wikipedia pages.
+**Note:: Random only gets articles from namespace 0, meaning no Category, User talk, or other meta-Wikipedia pages.
 
-	Keyword arguments:
+Keyword arguments:
 
-	* limit: The number of random pages returned (max of 10)
+* limit: The number of random pages returned (max of 10)
 */
 func GetRandom(limit int) ([]string, error) {
 	if limit < 0 {
@@ -243,23 +255,23 @@ func GetRandom(limit int) ([]string, error) {
 }
 
 /*
-	Get a WikipediaPage object for the page with title `title` or the pageid `pageid` (mutually exclusive).
+Get a WikipediaPage object for the page with title `title` or the pageid `pageid` (mutually exclusive).
 
-	Keyword arguments:
+Keyword arguments:
 
-	* title: The title of the page to load
+* title: The title of the page to load
 
-	* pageid: The numeric pageid of the page to load
+* pageid: The numeric pageid of the page to load
 
-	* auto_suggest: Let Wikipedia find a valid page title for the query. Default should be False
+* auto_suggest: Let Wikipedia find a valid page title for the query. Default should be False
 
-	* redirect: Allow redirection. Default should be True
+* redirect: Allow redirection. Default should be True
 
-	Return:
+Return:
 
-	* A WikipediaPage object
+* A WikipediaPage object
 
-	* Error
+* Error
 */
 func GetPage(title string, pageid int, suggest bool, redirect bool) (page.WikipediaPage, error) {
 	if pageid >= 0 {
@@ -286,21 +298,21 @@ func GetPage(title string, pageid int, suggest bool, redirect bool) (page.Wikipe
 }
 
 /*
-	Return a string summary of a page
+Return a string summary of a page
 
-	**Note:: This is a convenience wrapper - auto_suggest and redirect are enabled by default\
+**Note:: This is a convenience wrapper - auto_suggest and redirect are enabled by default\
 
-	Keyword arguments:
+Keyword arguments:
 
-	* title: Title of the page you want to get the summary
+* title: Title of the page you want to get the summary
 
-	* numsentence: If set, return the first `numsentence` sentences (can be no greater than 10).
+* numsentence: If set, return the first `numsentence` sentences (can be no greater than 10).
 
-	* numchar: If set, return only the first `numchar` characters (actual text returned may be slightly longer).
+* numchar: If set, return only the first `numchar` characters (actual text returned may be slightly longer).
 
-	* auto_suggest: Let Wikipedia find a valid page title for the query. Default is False
+* auto_suggest: Let Wikipedia find a valid page title for the query. Default is False
 
-	* redirect: Allow redirection without raising RedirectError. Defalt is True
+* redirect: Allow redirection without raising RedirectError. Defalt is True
 */
 func Summary(title string, numsentence int, numchar int, suggest bool, redirect bool) (string, error) {
 	page, err := GetPage(title, -1, suggest, redirect)
