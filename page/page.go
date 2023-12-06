@@ -172,7 +172,6 @@ func (page *WikipediaPage) ContinuedQuery(args map[string]string) ([]interface{}
 		new_args := utils.CopyMap(args)
 		utils.UpdateMap(new_args, last)
 
-		res, err := utils.WikiRequester(args)
 		res, err := utils.WikiRequester(new_args)
 		if err != nil {
 			return result, err

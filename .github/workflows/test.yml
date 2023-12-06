@@ -1,0 +1,33 @@
+name: Tests
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: fase
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+          check-latest: true
+          cache: true
+          cache-dependency-path: go.sum
+      - uses: technote-space/get-diff-action@v6.1.2
+        id: git_diff
+        with:
+          PATTERNS: |
+            **/*.go
+            go.mod
+            go.sum
+            **/go.mod
+      - name: test
+        if: env.GIF_DIFF
+        run: |
+          go test ./...
