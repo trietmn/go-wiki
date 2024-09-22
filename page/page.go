@@ -36,14 +36,14 @@ type WikipediaPage struct {
 }
 
 /*
-	Return true if the 2 pages are the same
+Return true if the 2 pages are the same
 */
 func (page WikipediaPage) Equal(other WikipediaPage) bool {
 	return page.PageID == other.PageID
 }
 
 /*
-	Get the string content of the page. Save it into the page.Content for later use
+Get the string content of the page. Save it into the page.Content for later use
 */
 func (page *WikipediaPage) GetContent() (string, error) {
 	if page.Content != "" {
@@ -72,9 +72,9 @@ func (page *WikipediaPage) GetContent() (string, error) {
 }
 
 /*
-	Get the html of the page. Save it into the page.HTML for later use\
+Get the html of the page. Save it into the page.HTML for later use\
 
-	**Warning:: This can get pretty slow on long pages.
+**Warning:: This can get pretty slow on long pages.
 */
 func (page *WikipediaPage) GetHTML() (string, error) {
 	if page.HTML != "" {
@@ -100,11 +100,11 @@ func (page *WikipediaPage) GetHTML() (string, error) {
 }
 
 /*
-	Get the revid of the page. Save it into the page.HTML for later use
+Get the revid of the page. Save it into the page.HTML for later use
 
-	The revision ID is a number that uniquely identifies the current version of the page.
-	It can be used to create the permalink or for other direct API calls. See Help:Page history <http://en.wikipedia.org/wiki/Wikipedia:Revision>
-	for more information.
+The revision ID is a number that uniquely identifies the current version of the page.
+It can be used to create the permalink or for other direct API calls. See Help:Page history <http://en.wikipedia.org/wiki/Wikipedia:Revision>
+for more information.
 */
 func (page *WikipediaPage) GetRevisionID() (float64, error) {
 	if page.RevisionID != 0 {
@@ -118,9 +118,9 @@ func (page *WikipediaPage) GetRevisionID() (float64, error) {
 }
 
 /*
-	Revision ID of the parent version of the current revision of this page.
+Revision ID of the parent version of the current revision of this page.
 
-	See ``revision_id`` for more information.
+See “revision_id“ for more information.
 */
 func (page *WikipediaPage) GetParentID() (float64, error) {
 	if page.RevisionID != 0 {
@@ -134,7 +134,7 @@ func (page *WikipediaPage) GetParentID() (float64, error) {
 }
 
 /*
-	String summary of a page
+String summary of a page
 */
 func (page *WikipediaPage) GetSummary() (string, error) {
 	if page.Summary != "" {
@@ -160,7 +160,7 @@ func (page *WikipediaPage) GetSummary() (string, error) {
 }
 
 /*
-	Based on <https://www.mediawiki.org/wiki/API:Query#Continuing_queries>
+Based on <https://www.mediawiki.org/wiki/API:Query#Continuing_queries>
 */
 func (page *WikipediaPage) ContinuedQuery(args map[string]string) ([]interface{}, error) {
 	// args["pageids"] = strconv.Itoa(page.PageID)
@@ -219,7 +219,15 @@ func (page *WikipediaPage) ContinuedQuery(args map[string]string) ([]interface{}
 }
 
 /*
-	List of URLs of images on the page.
+Based on <https://www.mediawiki.org/wiki/API:Query#Continuing_queries>
+*/
+func (page *WikipediaPage) CustomRequest(args map[string]string) ([]byte, error) {
+	args["titles"] = page.Title
+	return utils.WikiRequesterRaw(args)
+}
+
+/*
+List of URLs of images on the page.
 */
 func (page *WikipediaPage) GetImagesURL() ([]string, error) {
 	if page.CheckedImage {
@@ -250,7 +258,7 @@ func (page *WikipediaPage) GetImagesURL() ([]string, error) {
 }
 
 /*
-	Slice of float64 in the form of (lat, lon)
+Slice of float64 in the form of (lat, lon)
 */
 func (page *WikipediaPage) GetCoordinate() ([]float64, error) {
 	if len(page.Coordinate) == 2 {
@@ -282,8 +290,8 @@ func (page *WikipediaPage) GetCoordinate() ([]float64, error) {
 }
 
 /*
-	List of URLs of external links on a page.
-    May include external links within page that aren't technically cited anywhere.
+		List of URLs of external links on a page.
+	    May include external links within page that aren't technically cited anywhere.
 */
 func (page *WikipediaPage) GetReference() ([]string, error) {
 	if len(page.Reference) > 0 {
@@ -305,8 +313,8 @@ func (page *WikipediaPage) GetReference() ([]string, error) {
 }
 
 /*
-	List of titles of Wikipedia page links on a page.
-    **Note:: Only includes articles from namespace 0, meaning no Category, User talk, or other meta-Wikipedia pages.
+		List of titles of Wikipedia page links on a page.
+	    **Note:: Only includes articles from namespace 0, meaning no Category, User talk, or other meta-Wikipedia pages.
 */
 func (page *WikipediaPage) GetLink() ([]string, error) {
 	if len(page.Link) > 0 {
@@ -329,7 +337,7 @@ func (page *WikipediaPage) GetLink() ([]string, error) {
 }
 
 /*
-	List of categories of a page.
+List of categories of a page.
 */
 func (page *WikipediaPage) GetCategory() ([]string, error) {
 	if len(page.Category) > 0 {
@@ -351,7 +359,7 @@ func (page *WikipediaPage) GetCategory() ([]string, error) {
 }
 
 /*
-	List of section titles from the table of contents on the page.
+List of section titles from the table of contents on the page.
 */
 func (page *WikipediaPage) GetSectionList() ([]string, error) {
 	if len(page.Section) > 0 {
@@ -412,9 +420,9 @@ func (page *WikipediaPage) GetSection(section string) (string, error) {
 }
 
 /*
-	Load basic information from Wikipedia.
+		Load basic information from Wikipedia.
 
-    Confirm that page exists. If it's a disambiguation page, get a list of suggesting
+	    Confirm that page exists. If it's a disambiguation page, get a list of suggesting
 */
 func MakeWikipediaPage(pageid int, title string, originaltitle string, redirect bool) (WikipediaPage, error) {
 	page := WikipediaPage{}

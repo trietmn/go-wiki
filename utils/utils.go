@@ -19,12 +19,13 @@ const (
 )
 
 var (
-	UserAgent     string          = "go-wiki"
-	WikiLanguage  string          = "en"
-	WikiURL       string          = "http://%v.wikipedia.org/w/api.php"
-	LastCall      time.Time       = time.Now()
-	Cache         cache.WikiCache = cache.MakeWikiCache()
-	WikiRequester                 = RequestWikiApi
+	UserAgent        string          = "go-wiki"
+	WikiLanguage     string          = "en"
+	WikiURL          string          = "http://%v.wikipedia.org/w/api.php"
+	LastCall         time.Time       = time.Now()
+	Cache            cache.WikiCache = cache.MakeWikiCache()
+	WikiRequester                    = RequestWikiApi
+	WikiRequesterRaw                 = RequestWikiApiRaw
 )
 
 func TurnSliceOfString(s []interface{}) []string {
