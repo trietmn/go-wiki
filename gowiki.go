@@ -342,3 +342,53 @@ func Summary(title string, numsentence int, numchar int, suggest bool, redirect 
 
 	return res.Query.Page[strconv.Itoa(page.PageID)].Extract, nil
 }
+
+/*
+Get a list of pages which link to a certain page.
+
+Keyword arguments:
+
+* title: The title of the page you want the backlinks
+
+Return:
+
+* List of titles of Wikipedia pages that links to the page.
+
+* Error
+*/
+func GetBacklinks(title string) ([]string, error) {
+	var backlinks []string
+	last := ""
+	args := map[string]string{
+		"action":  "query",
+		"list":    "backlinks",
+		"bltitle": title,
+		"bllimit": "max",
+	}
+
+	for {
+		if last != "" {
+			args["blcontinue"] = last
+		}
+
+		res, err := utils.WikiRequester(args)
+		if err != nil {
+			return []string{}, err
+		}
+		if res.Error.Code != "" {
+			return []string{}, errors.New(res.Error.Info)
+		}
+
+		for _, s := range res.Query.Backlinks {
+			backlinks = append(backlinks, s.Title)
+		}
+
+		blcontinue := res.Continue["blcontinue"]
+		if blcontinue == nil {
+			break
+		}
+		last = blcontinue.(string)
+	}
+
+	return backlinks, nil
+}

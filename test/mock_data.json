@@ -188,5 +188,33 @@
     "great_wall_of_china.geo_search_with_existing_article_name": [
         "Great Wall of China"
     ],
-    "great_wall_of_china.geo_search_with_non_existing_article_name": []
+    "great_wall_of_china.geo_search_with_non_existing_article_name": [],
+    "great_wall_of_china.backlinks": [
+        "Army",
+        "China",
+        "Conscription",
+        "History of China",
+        "Civil engineering",
+        "Civilization (video game)",
+        "Empire",
+        "Factoid",
+        "Göktürks",
+        "Ibn Battuta",
+        "Keno",
+        "Khunjerab Pass",
+        "Mongols",
+        "Mongolia",
+        "Marco Polo",
+        "May 25",
+        "Microevolution",
+        "Mississippi River",
+        "Shang-Chi",
+        "Nanotechnology",
+        "Geography of China",
+        "Telecommunications in China",
+        "Qing dynasty",
+        "Richard Nixon",
+        "Sabah",
+        "Shaolin Monastery"
+    ]
 }
