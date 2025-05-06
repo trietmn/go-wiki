@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"time"
@@ -19,12 +19,13 @@ const (
 )
 
 var (
-	UserAgent     string          = "go-wiki"
-	WikiLanguage  string          = "en"
-	WikiURL       string          = "http://%v.wikipedia.org/w/api.php"
-	LastCall      time.Time       = time.Now()
-	Cache         cache.WikiCache = cache.MakeWikiCache()
-	WikiRequester                 = RequestWikiApi
+	UserAgent        string          = "go-wiki"
+	WikiLanguage     string          = "en"
+	WikiURL          string          = "http://%v.wikipedia.org/w/api.php"
+	LastCall         time.Time       = time.Now()
+	Cache            cache.WikiCache = cache.MakeWikiCache()
+	WikiRequester                    = RequestWikiApi
+	WikiRequesterRaw                 = RequestWikiApiRaw
 )
 
 func TurnSliceOfString(s []interface{}) []string {
@@ -75,11 +76,27 @@ Make a request to the Wikipedia API using the given search parameters.
 Returns a RequestResult (You can see the model in the models.go file)
 */
 func RequestWikiApi(args map[string]string) (models.RequestResult, error) {
+	resultBody, err := RequestWikiApiRaw(args)
+	if err != nil {
+		return models.RequestResult{}, err
+	}
+
+	// Parse
+	var result models.RequestResult
+	err = json.Unmarshal([]byte(resultBody), &result)
+	if err != nil {
+		return models.RequestResult{}, err
+	}
+	return result, nil
+}
+
+/*GenerateWikiApiRequest Generates a request object to query the Wikipedia API */
+func GenerateWikiApiRequest(args map[string]string) (*http.Request, error) {
 	url := fmt.Sprintf(WikiURL, WikiLanguage)
 	// Make new request object
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return models.RequestResult{}, err
+		return nil, err
 	}
 	// Add header
 	request.Header.Set("User-Agent", UserAgent)
@@ -99,11 +116,21 @@ func RequestWikiApi(args map[string]string) (models.RequestResult, error) {
 	if now.Sub(LastCall) < ApiGap {
 		wait := LastCall.Add(ApiGap).Sub(now)
 		time.Sleep(wait)
-		now = time.Now()
 	}
+	return request, nil
+}
+
+/*RequestWikiApiRaw Queries the Wikipedia API without parsing */
+func RequestWikiApiRaw(args map[string]string) ([]byte, error) {
+	request, err := GenerateWikiApiRequest(args)
+	now := time.Now()
+	if err != nil {
+		return []byte{}, nil
+	}
+
 	// Check in cache
-	full_url := request.URL.String()
-	r, err := Cache.Get(full_url)
+	fullUrl := request.URL.String()
+	r, err := Cache.Get(fullUrl)
 	if err == nil {
 		return r, nil
 	}
@@ -113,25 +140,23 @@ func RequestWikiApi(args map[string]string) (models.RequestResult, error) {
 	res, err := client.Do(request)
 	defer UpdateLastCall(now)
 	if err != nil {
-		return models.RequestResult{}, err
+		return []byte{}, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		return models.RequestResult{}, errors.New("unable to fetch the results")
+		return []byte{}, errors.New("unable to fetch the results")
 	}
+
 	// Read body
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return models.RequestResult{}, err
+		return []byte{}, err
 	}
-	// Parse
-	var result models.RequestResult
-	err = json.Unmarshal([]byte(body), &result)
-	if err != nil {
-		return models.RequestResult{}, err
-	}
-	Cache.Add(full_url, result)
-	return result, nil
+
+	// Add to cache
+	Cache.Add(fullUrl, body)
+
+	return body, nil
 }
 
 /*
