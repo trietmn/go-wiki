@@ -66,6 +66,10 @@ type InnerNormalize struct {
 	To   string `json:"to"`
 }
 
+type InnerBacklinks struct {
+	Title string `json:"title"`
+}
+
 type RequestQuery struct {
 	SearchInfo InnerSearchInfo      `json:"searchinfo"`
 	Normalize  []InnerNormalize     `json:"normalized"`
@@ -75,6 +79,7 @@ type RequestQuery struct {
 	Page       map[string]InnerPage `json:"pages"`
 	Random     []InnerSearch        `json:"random"`
 	Language   []map[string]string  `json:"languages"`
+	Backlinks  []InnerBacklinks     `json:"backlinks"`
 }
 
 /*

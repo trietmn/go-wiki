@@ -1475,5 +1475,37 @@
         "query": {
             "geosearch": []
         }
+    },
+    "action:query;list:backlinks;bltitle:Great Wall of China;bllimit:max": {
+        "query": {
+            "backlinks": [
+                    {"Title": "Army"},
+                    {"Title": "China"},
+                    {"Title": "Conscription"},
+                    {"Title": "History of China"},
+                    {"Title": "Civil engineering"},
+                    {"Title": "Civilization (video game)"},
+                    {"Title": "Empire"},
+                    {"Title": "Factoid"},
+                    {"Title": "Göktürks"},
+                    {"Title": "Ibn Battuta"},
+                    {"Title": "Keno"},
+                    {"Title": "Khunjerab Pass"},
+                    {"Title": "Mongols"},
+                    {"Title": "Mongolia"},
+                    {"Title": "Marco Polo"},
+                    {"Title": "May 25"},
+                    {"Title": "Microevolution"},
+                    {"Title": "Mississippi River"},
+                    {"Title": "Shang-Chi"},
+                    {"Title": "Nanotechnology"},
+                    {"Title": "Geography of China"},
+                    {"Title": "Telecommunications in China"},
+                    {"Title": "Qing dynasty"},
+                    {"Title": "Richard Nixon"},
+                    {"Title": "Sabah"},
+                    {"Title": "Shaolin Monastery"}
+            ]
+        }
     }
 }
