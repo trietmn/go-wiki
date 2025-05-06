@@ -437,3 +437,15 @@ func TestCoordinates(t *testing.T) {
 		t.Errorf("different longitude, got %v, expect %v", content[1], v)
 	}
 }
+
+func TestGetFinalSection(t *testing.T) {
+	page, err := gowiki.GetPage("Rafael Nadal", -1, false, true)
+	if err != nil {
+		t.Errorf("%v", err)
+	}
+
+	_, err = page.GetSection("External links")
+	if err != nil {
+		t.Errorf("%v", err)
+	}
+}
