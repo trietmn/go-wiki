@@ -449,3 +449,15 @@ func TestGetFinalSection(t *testing.T) {
 		t.Errorf("%v", err)
 	}
 }
+
+func TestGetEmptyCoordinate(t *testing.T) {
+	page, err := gowiki.GetPage("Rafael Nadal", -1, false, true)
+	if err != nil {
+		t.Errorf("%v", err)
+	}
+
+	_, err = page.GetCoordinate()
+	if err != nil {
+		t.Errorf("%v", err)
+	}
+}
