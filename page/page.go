@@ -275,15 +275,18 @@ func (page *WikipediaPage) GetCoordinate() ([]float64, error) {
 		page.Coordinate = []float64{-1, -1}
 		return page.Coordinate, nil
 	} else {
-		temp := res.Query.Page[strconv.Itoa(page.PageID)].Coordinate[0]
-		page.Coordinate = []float64{temp["lat"].(float64), temp["lon"].(float64)}
+		temp := res.Query.Page[strconv.Itoa(page.PageID)].Coordinate
+		if len(temp) == 0 {
+			return []float64{}, nil
+		}
+		page.Coordinate = []float64{temp[0]["lat"].(float64), temp[0]["lon"].(float64)}
 	}
 	return page.Coordinate, nil
 }
 
 /*
-List of URLs of external links on a page.
-May include external links within page that aren't technically cited anywhere.
+		List of URLs of external links on a page.
+	    May include external links within page that aren't technically cited anywhere.
 */
 func (page *WikipediaPage) GetReference() ([]string, error) {
 	if len(page.Reference) > 0 {
@@ -305,8 +308,8 @@ func (page *WikipediaPage) GetReference() ([]string, error) {
 }
 
 /*
-List of titles of Wikipedia page links on a page.
-**Note:: Only includes articles from namespace 0, meaning no Category, User talk, or other meta-Wikipedia pages.
+		List of titles of Wikipedia page links on a page.
+	    **Note:: Only includes articles from namespace 0, meaning no Category, User talk, or other meta-Wikipedia pages.
 */
 func (page *WikipediaPage) GetLink() ([]string, error) {
 	if len(page.Link) > 0 {
@@ -413,9 +416,9 @@ func (page *WikipediaPage) GetSection(section string) (string, error) {
 }
 
 /*
-Load basic information from Wikipedia.
+		Load basic information from Wikipedia.
 
-Confirm that page exists. If it's a disambiguation page, get a list of suggesting
+	    Confirm that page exists. If it's a disambiguation page, get a list of suggesting
 */
 func MakeWikipediaPage(pageid int, title string, originaltitle string, redirect bool) (WikipediaPage, error) {
 	page := WikipediaPage{}
