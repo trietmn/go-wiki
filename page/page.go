@@ -218,6 +218,11 @@ func (page *WikipediaPage) ContinuedQuery(args map[string]string) ([]interface{}
 	return result, nil
 }
 
+func (page *WikipediaPage) CustomRequest(args map[string]string) ([]byte, error) {
+	args["titles"] = page.Title
+	return utils.WikiRequesterRaw(args)
+}
+
 /*
 List of URLs of images on the page.
 */

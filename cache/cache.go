@@ -4,8 +4,6 @@ import (
 	"crypto/sha256"
 	"errors"
 	"time"
-
-	"github.com/trietmn/go-wiki/models"
 )
 
 var (
@@ -34,7 +32,7 @@ Create a cache that store:
 */
 func MakeWikiCache() WikiCache {
 	res := WikiCache{}
-	res.Memory = map[string]models.RequestResult{}
+	res.Memory = map[string][]byte{}
 	res.HashedKeyQueue = make([]string, 0, MaxCacheMemory)
 	res.CreatedTime = map[string]time.Time{}
 	return res
@@ -42,9 +40,9 @@ func MakeWikiCache() WikiCache {
 
 // Cache to store Wikipedia request result
 type WikiCache struct {
-	Memory         map[string]models.RequestResult // Map store request result
-	HashedKeyQueue []string                        // Key queue. Delete the first item if reach max cache
-	CreatedTime    map[string]time.Time            // Map store created time
+	Memory         map[string][]byte    // Map store request result
+	HashedKeyQueue []string             // Key queue. Delete the first item if reach max cache
+	CreatedTime    map[string]time.Time // Map store created time
 }
 
 // Hash a string into SHA256
@@ -60,13 +58,13 @@ func (cache WikiCache) GetLen() int {
 }
 
 // Add cache into the WikiCache
-func (cache *WikiCache) Add(s string, res models.RequestResult) {
+func (cache *WikiCache) Add(s string, res []byte) {
 	if len(cache.Memory) >= MaxCacheMemory {
 		cache.Pop()
 	}
 	key := HashCacheKey(s)
 	if cache.Memory == nil {
-		cache.Memory = map[string]models.RequestResult{}
+		cache.Memory = map[string][]byte{}
 		cache.CreatedTime = map[string]time.Time{}
 		cache.HashedKeyQueue = make([]string, 0, MaxCacheMemory)
 	}
@@ -78,7 +76,7 @@ func (cache *WikiCache) Add(s string, res models.RequestResult) {
 }
 
 // Get response from the Cache
-func (cache *WikiCache) Get(s string) (models.RequestResult, error) {
+func (cache *WikiCache) Get(s string) ([]byte, error) {
 	key := HashCacheKey(s)
 	if value, ok := cache.Memory[key]; ok {
 		if time.Since(cache.CreatedTime[key]) <= CacheExpiration {
@@ -88,10 +86,10 @@ func (cache *WikiCache) Get(s string) (models.RequestResult, error) {
 		} else {
 			cache.HashedKeyQueue = FindAndDel(cache.HashedKeyQueue, key)
 			delete(cache.Memory, key)
-			return models.RequestResult{}, errors.New("the data is outdated")
+			return []byte{}, errors.New("the data is outdated")
 		}
 	}
-	return models.RequestResult{}, errors.New("cache key not exist")
+	return []byte{}, errors.New("cache key not exist")
 }
 
 // Delete the first key in the Cache
