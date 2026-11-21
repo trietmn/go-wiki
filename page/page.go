@@ -24,6 +24,7 @@ type WikipediaPage struct {
 	RevisionID     float64          `json:"revid"`
 	ParentID       float64          `json:"parentid"`
 	Summary        string           `json:"summary"`
+	SummaryHTML    string           `json:"summaryhtml"`
 	CheckedImage   bool             `json:"checkedimage"`
 	Images         []string         `json:"images"`
 	Coordinate     []float64        `json:"coordinates"`
@@ -157,6 +158,33 @@ func (page *WikipediaPage) GetSummary() (string, error) {
 	}
 	page.Summary = res.Query.Page[pageid].Extract
 	return page.Summary, nil
+}
+
+// GetSummaryHTML returns the introduction as HTML, cached separately from the
+// plain-text summary. Callers must sanitize it before displaying it.
+func (page *WikipediaPage) GetSummaryHTML() (string, error) {
+	if page.SummaryHTML != "" {
+		return page.SummaryHTML, nil
+	}
+	args := map[string]string{
+		"action":  "query",
+		"prop":    "extracts",
+		"exintro": "",
+		"titles":  page.Title,
+	}
+	res, err := utils.WikiRequester(args)
+	if err != nil {
+		return "", err
+	}
+	if res.Error.Code != "" {
+		return "", errors.New(res.Error.Info)
+	}
+	extract, ok := res.Query.Page[strconv.Itoa(page.PageID)]
+	if !ok {
+		return "", errors.New("summary not found for page")
+	}
+	page.SummaryHTML = extract.Extract
+	return page.SummaryHTML, nil
 }
 
 /*

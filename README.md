@@ -157,6 +157,7 @@ fmt.Printf("Summary: %v\n", res)
 | GetRevisionID  | Get revid field of a page                            | page.GetRevisionID()       |
 | GetParentID    | Get parentid field of a page                         | page.GetParentID()         |
 | GetSummary     | Get the summary of the page                          | page.GetSummary()          |
+| GetSummaryHTML | Get the introduction as HTML                         | page.GetSummaryHTML()      |
 | GetImagesURL   | Get all of the image URL appear in the page          | page.GetImageURL()         |
 | GetCoordinate  | Get the page coordinate if exist                     | page.GetCoordinate()       |
 | GetReference   | Get all of the extenal links in the page             | page.GetReference()        |
@@ -164,6 +165,10 @@ fmt.Printf("Summary: %v\n", res)
 | GetCategory    | Get all of the categories of a page                  | page.GetCategory()         |
 | GetSectionList | Get all of the sections of the page                  | page.GetSectionList()      |
 | GetSection     | Get the content of a specific section in the page    | page.GetSection("History") |
+
+`GetSummary()` continues to return plain text. `GetSummaryHTML()` retrieves only
+the introduction, retaining HTML formatting and using a separate cache from the
+plain-text summary and full article HTML. Sanitize its output before displaying it.
 
 ## License
 
