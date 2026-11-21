@@ -157,6 +157,7 @@ fmt.Printf("Summary: %v\n", res)
 | GetRevisionID  | Get revid field of a page                            | page.GetRevisionID()       |
 | GetParentID    | Get parentid field of a page                         | page.GetParentID()         |
 | GetSummary     | Get the summary of the page                          | page.GetSummary()          |
+| GetSummaryHTML | Get the introduction as HTML                         | page.GetSummaryHTML()      |
 | GetImagesURL   | Get all of the image URL appear in the page          | page.GetImageURL()         |
 | GetCoordinate  | Get the page coordinate if exist                     | page.GetCoordinate()       |
 | GetReference   | Get all of the extenal links in the page             | page.GetReference()        |

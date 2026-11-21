@@ -3,11 +3,72 @@ package test
 import (
 	"errors"
 	"github.com/trietmn/go-wiki"
+	"github.com/trietmn/go-wiki/models"
 	"github.com/trietmn/go-wiki/page"
 	"github.com/trietmn/go-wiki/utils"
 	"strconv"
 	"testing"
 )
+
+func TestSummaryHTMLPreservesFormattingAndSeparateCaches(t *testing.T) {
+	previous := utils.WikiRequester
+	defer func() { utils.WikiRequester = previous }()
+	htmlSummary := `<p><b>A writer</b> wrote <i>A book</i>.</p><p>Another paragraph.</p>`
+	plainSummary := "A writer wrote A book.\n\nAnother paragraph."
+	requests := 0
+	utils.WikiRequester = func(args map[string]string) (models.RequestResult, error) {
+		requests++
+		if args["prop"] != "extracts" || args["titles"] != "A writer" {
+			t.Fatalf("unexpected request: %v", args)
+		}
+		if _, intro := args["exintro"]; !intro {
+			t.Fatal("must request only the introduction")
+		}
+		text := htmlSummary
+		if _, plaintext := args["explaintext"]; plaintext {
+			text = plainSummary
+		}
+		return models.RequestResult{Query: models.RequestQuery{
+			Page: map[string]models.InnerPage{"42": {PageID: 42, Extract: text}},
+		}}, nil
+	}
+	article := page.WikipediaPage{PageID: 42, Title: "A writer"}
+	for range []int{0, 1} {
+		if text, err := article.GetSummary(); err != nil || text != plainSummary {
+			t.Fatalf("plain-text summary must be unchanged: %q, %v", text, err)
+		}
+		if text, err := article.GetSummaryHTML(); err != nil || text != htmlSummary {
+			t.Fatalf("HTML summary must preserve formatting: %q, %v", text, err)
+		}
+	}
+	if requests != 2 {
+		t.Fatalf("HTML and plain-text summaries must have separate caches, got %d requests", requests)
+	}
+}
+
+func TestSummaryHTMLReturnsErrors(t *testing.T) {
+	for _, tc := range []struct {
+		name     string
+		response models.RequestResult
+		err      error
+	}{
+		{name: "network", err: errors.New("request failed")},
+		{name: "API", response: models.RequestResult{Error: models.RequestError{Code: "failed", Info: "API failure"}}},
+		{name: "missing", response: models.RequestResult{}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			previous := utils.WikiRequester
+			defer func() { utils.WikiRequester = previous }()
+			utils.WikiRequester = func(map[string]string) (models.RequestResult, error) {
+				return tc.response, tc.err
+			}
+			article := page.WikipediaPage{PageID: 42, Title: "A writer"}
+			if text, err := article.GetSummaryHTML(); err == nil || text != "" || article.SummaryHTML != "" {
+				t.Fatalf("failed request must not cache a summary: %q, %v", text, err)
+			}
+		})
+	}
+}
 
 var (
 	isSetUp bool = false
