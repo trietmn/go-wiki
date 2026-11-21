@@ -166,10 +166,6 @@ fmt.Printf("Summary: %v\n", res)
 | GetSectionList | Get all of the sections of the page                  | page.GetSectionList()      |
 | GetSection     | Get the content of a specific section in the page    | page.GetSection("History") |
 
-`GetSummary()` continues to return plain text. `GetSummaryHTML()` retrieves only
-the introduction, retaining HTML formatting and using a separate cache from the
-plain-text summary and full article HTML. Sanitize its output before displaying it.
-
 ## License
 
 MIT licensed. See the LICENSE file for full details.
